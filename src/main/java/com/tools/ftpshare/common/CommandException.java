@@ -1,5 +1,8 @@
 package com.tools.ftpshare.common;
 
+/**
+ * @author jpeng
+ */
 public class CommandException extends RuntimeException {
 	private static final long serialVersionUID = -603611298981511389L;
 

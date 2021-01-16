@@ -15,18 +15,20 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+/**
+ * @author jpeng
+ */
 public class FtpHandler extends SimpleChannelInboundHandler<String> {
 	private final Logger logger = LoggerFactory.getLogger(FtpHandler.class);
 	//定义反射方式获取函数的变量类型
 	private final Class[] commandHandlerParamTypes = {String.class, StringTokenizer.class, ChannelHandlerContext.class};
 	 
 	//通过反射将方法与FTP操作字进行关联。
-	private Class<FtpCmd> ftpcmd = FtpCmd.class;
-	private Object ftpcmd_Instance = null;
-	private String version="0.0.1";
-	
+	private final Class<FtpCmd> ftpcmd = FtpCmd.class;
+	private Object ftpcmdInstance = null;
+
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		if (cause instanceof IOException) {
 			ctx.channel().close();
 			return;
@@ -46,27 +48,28 @@ public class FtpHandler extends SimpleChannelInboundHandler<String> {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		send(CmdCodeEnum.CODE_CONNECT_SUCCESS.getCode(),CmdCodeEnum.CODE_CONNECT_SUCCESS.getMsg().replace("{}",version), ctx);
-		ftpcmd_Instance = ftpcmd.newInstance();
+		String version = "0.0.1";
+		send(CmdCodeEnum.CODE_CONNECT_SUCCESS.getCode(),CmdCodeEnum.CODE_CONNECT_SUCCESS.getMsg().replace("{}", version), ctx);
+		ftpcmdInstance = ftpcmd.newInstance();
 	}
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		logger.debug("socket close");
-		ftpcmd_Instance = null;
+		ftpcmdInstance = null;
 		super.channelInactive(ctx);
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, String msg) {
 		StringTokenizer st = new StringTokenizer(msg);
 		String command = st.nextToken().toLowerCase();
 		logger.debug("Line: {},Command: {}", msg,command);
 		
-		Object args[] = { msg, st, ctx };
+		Object[] args = { msg, st, ctx };
 		try {
 			Method commandHandler = ftpcmd.getMethod("command_" + command, commandHandlerParamTypes);
-			commandHandler.invoke(ftpcmd_Instance, args);
+			commandHandler.invoke(ftpcmdInstance, args);
 		} catch (InvocationTargetException e) {
 			CommandException ce = (CommandException) e.getTargetException();
 			send(ce.getCode(), ce.getText(), ctx);

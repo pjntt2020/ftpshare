@@ -10,6 +10,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+/**
+ * @author jpeng
+ */
 public class FtpBoostrap {
 	private final static Logger logger = LoggerFactory.getLogger(FtpBoostrap.class);
 	public static void main(String[] args) throws Exception {

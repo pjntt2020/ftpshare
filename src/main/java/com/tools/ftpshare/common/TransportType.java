@@ -5,6 +5,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+/**
+ * @author jpeng
+ */
 public class TransportType {
 
 	private final char type;

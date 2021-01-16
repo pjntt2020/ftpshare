@@ -11,6 +11,9 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
+/**
+ * @author jpeng
+ */
 public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 
 	@Override

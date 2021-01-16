@@ -57,11 +57,11 @@ public class FtpCmd {
 		Stack<String> segments = new Stack<String>();
 		while (pathSt.hasMoreTokens()) {
 			String segment = pathSt.nextToken();
-			if (segment.equals("..")) {
+			if ("..".equals(segment)) {
 				if (!segments.empty()) {
 					segments.pop();
 				}
-			} else if (segment.equals(".")) {
+			} else if (".".equals(segment)) {
 				// skip
 			} else {
 				segments.push(segment);
@@ -103,7 +103,7 @@ public class FtpCmd {
 		if (file.isDirectory()) {
 			return String.format("type=dir;modify=%s; %s\r\n", dateStr, file.getName());
 		} else {
-			return (String.format("type=file;modify=%s;size=%s; %s\r\n", dateStr, Long.toString(file.length()),
+			return (String.format("type=file;modify=%s;size=%s; %s\r\n", dateStr, file.length(),
 					file.getName()));
 		}
 
@@ -188,8 +188,8 @@ public class FtpCmd {
 		} else {
 			password = "";
 		}
-		if (!username.equalsIgnoreCase("anonymous")) {
-			if (!(username.equals("morf") && password.equals("123"))) {
+		if (!"anonymous".equalsIgnoreCase(username)) {
+			if (!("morf".equals(username) && "123".equals(password))) {
 				throw new CommandException(CmdCodeEnum.CODE_NOT_LOGGED_IN.getCode(),
 						CmdCodeEnum.CODE_NOT_LOGGED_IN.getMsg());
 			}
@@ -242,8 +242,9 @@ public class FtpCmd {
 	public void command_cdup(String line, StringTokenizer st, ChannelHandlerContext ctx) throws CommandException {
 		checkLogin();
 		currentDir = currentDir.substring(0, currentDir.lastIndexOf("/"));
-		if (currentDir.length() == 0)
+		if (currentDir.length() == 0) {
 			currentDir = "/";
+		}
 		send(CmdCodeEnum.CODE_COMMAND_SUCCESS.getCode(),
 				CmdCodeEnum.CODE_COMMAND_SUCCESS.getMsg().replace("{}", "CDUP"), ctx);
 	}
@@ -316,8 +317,9 @@ public class FtpCmd {
 	public void command_cwd(String line, StringTokenizer st, ChannelHandlerContext ctx) throws CommandException {
 		checkLogin();
 		String newDir = currentDir;
-		if (st.hasMoreElements())
+		if (st.hasMoreElements()) {
 			newDir = st.nextToken();
+		}
 
 		if (newDir.length() == 0) {
 			newDir = "/";
@@ -518,7 +520,7 @@ public class FtpCmd {
 		} catch (Exception e) {
 			throw new NoSuchElementException(e.getMessage());
 		}
-		if (path.equalsIgnoreCase("null")) {
+		if ("null".equalsIgnoreCase(path)) {
 			send(CmdCodeEnum.CODE_NOT_FOUND.getCode(), "No such file or directory.", ctx);
 			return;
 		}
@@ -563,11 +565,13 @@ public class FtpCmd {
 		String charset = "";
 		String onoff = "";
 		logger.debug("{}", st.countTokens());
-		if (st.hasMoreTokens())
+		if (st.hasMoreTokens()) {
 			charset = st.nextToken();
+		}
 
-		if (st.hasMoreTokens())
+		if (st.hasMoreTokens()) {
 			onoff = st.nextToken();
+		}
 
 		if ("utf8".equalsIgnoreCase(charset) && "on".equalsIgnoreCase(onoff)) {
 			ctx.pipeline().replace("decoder", "decoder", new StringDecoder(CmdCodeEnum.UTF8));

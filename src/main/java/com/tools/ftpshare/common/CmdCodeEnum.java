@@ -2,6 +2,10 @@ package com.tools.ftpshare.common;
 
 import java.nio.charset.Charset;
 
+/**
+ * @author jpeng
+ */
+
 public enum CmdCodeEnum {
 	CODE_CONNECT_SUCCESS("220","FTP server ({}) ready."),
 	CODE_NOT_LOGGED_IN("530","Login incorrect."),

@@ -1,31 +1,36 @@
 package com.tools.ftpshare.handlers;
 
+import com.tools.ftpshare.common.CmdCodeEnum;
+import com.tools.ftpshare.common.CommandException;
+import com.tools.ftpshare.common.Session;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tools.ftpshare.common.CommandException;
-import com.tools.ftpshare.common.CmdCodeEnum;
-
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * @author jpeng
  */
 public class FtpHandler extends SimpleChannelInboundHandler<String> {
 	private final Logger logger = LoggerFactory.getLogger(FtpHandler.class);
-	//定义反射方式获取函数的变量类型
-	private final Class[] commandHandlerParamTypes = {String.class, StringTokenizer.class, ChannelHandlerContext.class};
-	 
-	//通过反射将方法与FTP操作字进行关联。
+	/**
+	 * 定义反射方式获取函数的变量类型
+	 */
+
+	private final Class[] commandHandlerParamTypes = {String.class, StringTokenizer.class, ChannelHandlerContext.class,Session.class};
+
+	/**
+	 * 通过反射将方法与FTP操作字进行关联。
+	 */
 	private final Class<FtpCmd> ftpcmd = FtpCmd.class;
 	private Object ftpcmdInstance = null;
+	private Session usersession;
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -44,6 +49,7 @@ public class FtpHandler extends SimpleChannelInboundHandler<String> {
 		String line = code + " " + response + "\r\n";
 		byte[] data = line.getBytes(CmdCodeEnum.ASCII);
 		ctx.writeAndFlush(Unpooled.wrappedBuffer(data));
+
 	}
 
 	@Override
@@ -51,12 +57,14 @@ public class FtpHandler extends SimpleChannelInboundHandler<String> {
 		String version = "0.0.1";
 		send(CmdCodeEnum.CODE_CONNECT_SUCCESS.getCode(),CmdCodeEnum.CODE_CONNECT_SUCCESS.getMsg().replace("{}", version), ctx);
 		ftpcmdInstance = ftpcmd.newInstance();
+		usersession = new Session();
 	}
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		logger.debug("socket close");
+		logger.debug("main socket close");
 		ftpcmdInstance = null;
+		usersession = null;
 		super.channelInactive(ctx);
 	}
 
@@ -66,7 +74,7 @@ public class FtpHandler extends SimpleChannelInboundHandler<String> {
 		String command = st.nextToken().toLowerCase();
 		logger.debug("Line: {},Command: {}", msg,command);
 		
-		Object[] args = { msg, st, ctx };
+		Object[] args = { msg, st, ctx, usersession};
 		try {
 			Method commandHandler = ftpcmd.getMethod("command_" + command, commandHandlerParamTypes);
 			commandHandler.invoke(ftpcmdInstance, args);

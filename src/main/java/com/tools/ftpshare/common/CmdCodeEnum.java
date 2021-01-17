@@ -13,7 +13,7 @@ public enum CmdCodeEnum {
 	CODE_PASSWORD_NEEDED("331","Password required for {}."),
 	CODE_EXCEPTION_FAILED("500","Command '{}' Execution failed"),
 	CODE_LOGIN_SUCCESS("230","Authorization has been successfully."),
-	CODE_SYSTEM_TYPE("215", "UNIX emulated by File_Zilla"),
+	CODE_SYSTEM_TYPE("215", "UNIX emulated by FTPShare"),
 	CODE_COMMAND_SUCCESS("200","{} command successful."),
 	CODE_SYNTAX_ERROR("501","Syntax error."),
 	CODE_READ_DIR("150","Opening data channel for directory list."),
@@ -33,7 +33,7 @@ public enum CmdCodeEnum {
 	CODE_CWD_FAIL("550","\"{}\" No such directory."),
 	
 	CODE_PASV_FAIL("425","Cannot open data connection."),
-	CODE_PASV_ENABLE("227",""),
+	CODE_PASV_ENABLE("227","Entering Passive Mode ({})"),
 
 	
 	CODE_MLST_BEGIN("250-Listing","{}"),
@@ -47,6 +47,11 @@ public enum CmdCodeEnum {
 	
 	public static final Charset ASCII = Charset.forName("ASCII");
 	public static final Charset UTF8 = Charset.forName("UTF-8");
+
+	public static final String PASV="pasv";
+	public static final String PORT="port";
+
+	public static final String EOL="\r\n";
 
 	private String code;
 	private String msg;

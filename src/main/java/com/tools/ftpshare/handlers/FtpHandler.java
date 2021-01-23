@@ -4,6 +4,7 @@ import com.tools.ftpshare.common.CmdCodeEnum;
 import com.tools.ftpshare.common.CommandException;
 import com.tools.ftpshare.common.Session;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -70,6 +72,13 @@ public class FtpHandler extends SimpleChannelInboundHandler<String> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, String msg) {
+		
+		for (Map.Entry<String, ChannelHandler> entry : ctx.channel().pipeline()) {
+			logger.debug(entry.getKey());
+		}
+		
+		
+		
 		StringTokenizer st = new StringTokenizer(msg);
 		String command = st.nextToken().toLowerCase();
 		logger.debug("Line: {},Command: {}", msg,command);

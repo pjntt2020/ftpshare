@@ -44,11 +44,8 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.1</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.logback-extensions</groupId>
-			<artifactId>logback-ext-spring</artifactId>
-			<version>0.1.4</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.logback-extensions</groupId> <artifactId>logback-ext-spring</artifactId> 
+			<version>0.1.4</version> </dependency> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -59,6 +56,14 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.11</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.21.0-GA</version>
 		</dependency>
 
 
@@ -123,6 +128,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -132,6 +138,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
 
 
 	</build>

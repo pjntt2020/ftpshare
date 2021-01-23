@@ -20,9 +20,9 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 	protected void initChannel(SocketChannel ch) throws Exception {
 		ChannelPipeline p = ch.pipeline();
 		p.addLast("framer", new DelimiterBasedFrameDecoder(256, Delimiters.lineDelimiter()));
-		p.addLast("decoder", new StringDecoder(CmdCodeEnum.ASCII));
-		p.addLast("encoder", new StringEncoder(CmdCodeEnum.ASCII));
-		p.addLast("handler", new FtpHandler());
+		p.addLast("StringDecoder", new StringDecoder(CmdCodeEnum.ASCII));
+		p.addLast("StringEncoder", new StringEncoder(CmdCodeEnum.ASCII));
+		p.addLast("Serverhandler", new FtpHandler());
 
 	}
 

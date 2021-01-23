@@ -1,25 +1,19 @@
 package com.tools.ftpshare.boostrap;
 
-import java.net.InetSocketAddress;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tools.ftpshare.common.Session;
 import com.tools.ftpshare.handlers.DataTransferHandler;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.FileRegion;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.util.Map;
 
 public enum PortFactory {
 	/**
@@ -28,6 +22,9 @@ public enum PortFactory {
 	INS;
     private Bootstrap portBootstrop = new Bootstrap()
             .option(ChannelOption.SO_BACKLOG, 1024)
+			/**
+			 * 设置端口重用
+			 */
             .option(ChannelOption.SO_REUSEADDR,true)
             .group(new NioEventLoopGroup())
             .channel(NioSocketChannel.class);
@@ -69,9 +66,6 @@ public enum PortFactory {
 		try {
 			ChannelHandlerContext ctx = usersession.getCtx();
 			if (null != ctx) {
-				/**
-				 * 使用了ByteArray编解码器，只需要写入字符烽组就可以。
-				 */
 
 				for (Map.Entry<String, ChannelHandler> entry : ctx.channel().pipeline()) {
 					logger.debug(entry.getKey());

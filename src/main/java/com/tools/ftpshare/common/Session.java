@@ -139,14 +139,4 @@ public class Session {
 	}
 
 
-//	public Boolean isTransmission() {
-//		return transmission;
-//	}
-//
-//
-//	public void setTransmission(Boolean transmission) {
-//		this.transmission = transmission;
-//	}
-
-
 }

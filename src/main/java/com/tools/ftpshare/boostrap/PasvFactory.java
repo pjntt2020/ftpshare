@@ -84,12 +84,6 @@ public enum PasvFactory {
 	}
 
 	public void delListen(Session usersession) {
-		// ChannelFuture future = usersession.getFuture();
-		// if (null != future) {
-		// future.channel().close().addListener(ChannelFutureListener.CLOSE);
-		// future.awaitUninterruptibly();
-		// logger.info("关闭端口:{}", usersession.getUserid());
-		// }
 
 		try {
 			usersession.getCtx().close().sync();
